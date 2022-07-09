@@ -1,44 +1,65 @@
-
-const { Schema, model } = require('mongoose');
+const { Schema, model, ObjectId } = require("mongoose");
 
 const UsuarioSchema = Schema({
-    nombre: {
-        type: String,
-        required: [true, 'El nombre es obligatorio']
-    },
-    correo: {
-        type: String,
-        required: [true, 'El correo es obligatorio'],
-        unique: true
-    },
-    password: {
-        type: String,
-        required: [true, 'La contraseña es obligatoria'],
-    },
-    img: {
-        type: String,
-    },
-    rol: {
-        type: String,
-        required: true,
-        emun: ['ADMIN_ROLE', 'USER_ROLE']
-    },
-    estado: {
-        type: Boolean,
-        default: true
-    },
-    google: {
-        type: Boolean,
-        default: false
-    },
+  name: {
+    type: String,
+    required: [true, "El nombre es obligatorio"],
+  },
+
+  lastname: {
+    type: String,
+    required: [true, "El apeid es obligatorio"],
+  },
+  username: {
+    type: String,
+    required: [true, "El usuario es obligatorio"],
+  },
+  email: {
+    type: String,
+    required: [true, "El correo es obligatorio"],
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: [true, "La contraseña es obligatoria"],
+  },
+  provider: {
+    type: String,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now(),
+  },
+  role: {
+    type: ObjectId,
+  },
+  updated_by: {
+    type: String,
+    default: Date.now(),
+  },
+  blocked: {
+    type: Boolean,
+    default: false,
+  },
+  confirmed: {
+    type: Boolean,
+    default: true,
+  },
+
+  /*   google: {
+    type: Boolean,
+    default: false,
+  }, */
 });
 
-
-
 UsuarioSchema.methods.toJSON = function () {
-    const { __v, password, _id, ...usuario } = this.toObject();
-    usuario.uid = _id
-    return usuario;
-}
+  const { __v, password, _id, ...usuario } = this.toObject();
+  usuario._id = _id;
+  return usuario;
+};
 
-module.exports = model('Usuario', UsuarioSchema);
+module.exports = model("users-permissions_user", UsuarioSchema);
