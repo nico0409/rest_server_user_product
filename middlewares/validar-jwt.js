@@ -3,7 +3,14 @@ const jwt = require("jsonwebtoken");
 const Usuario = require("../models/usuario");
 
 const validarJWT = async (req = request, res = response, next) => {
-  const token = req.header("authorization").replace("Bearer ", "");
+  const autorization = req.header("authorization");
+
+  if (!autorization) {
+    return res.status(401).json({
+      msg: "No hay token",
+    });
+  }
+  const token = autorization.replace("Bearer ", "");
 
   if (!token) {
     return res.status(401).json({
@@ -30,6 +37,8 @@ const validarJWT = async (req = request, res = response, next) => {
     }
     req.usuario = usuario;
     req._id = _id;
+    req.body = { ...req.body, _id };
+    console.log(req);
   } catch (error) {
     return res.status(401).json({
       ok: false,

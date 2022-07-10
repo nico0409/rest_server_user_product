@@ -10,6 +10,8 @@ class Server {
     this.usuariosPath = "/auth/local/register";
     this.authPath = "/api/auth";
     this.userme = "/users";
+    this.addresses = "/addresses";
+    this.platforms = "/platforms";
 
     // Conectar a base de datos
     this.conectarDB();
@@ -40,6 +42,8 @@ class Server {
     this.app.use(this.authPath, require("../routes/auth"));
     this.app.use(this.usuariosPath, require("../routes/usuarios"));
     this.app.use(this.userme, require("../routes/usuarios"));
+    this.app.use(this.addresses, require("../routes/addresses"));
+    this.app.use(this.platforms, require("../routes/platforms"));
   }
 
   listen() {
