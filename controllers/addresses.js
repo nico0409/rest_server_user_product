@@ -17,7 +17,7 @@ const addressesPost = async (req, res = response) => {
     department,
     _id,
   } = req.body;
-  console.log(req.body);
+
   const addresse = new Addresse({
     title,
     city,

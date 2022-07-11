@@ -6,7 +6,7 @@ const { generarJWT } = require("../helpers/generarJWT");
 
 const login = async (req, res) => {
   const { identifier, password } = req.body;
-  console.log(identifier, password);
+
   try {
     //verificar que el correo exista
     const user = await Usuario.findOne({ email: identifier });
@@ -17,7 +17,7 @@ const login = async (req, res) => {
     }
 
     //verificar si el usuario esta activo
-    console.log("usuario inactivo" + user.blocked);
+
     if (user.blocked) {
       return res.status(400).json({
         msg: "El usuario no esta activo",

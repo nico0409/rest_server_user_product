@@ -87,7 +87,6 @@ const usuariosPorJWT = async (req = request, res = response) => {
   const usuario = await Usuario.findOne({
     _id: req._id,
   });
-  console.log(usuario);
 
   res.json(usuario);
 };
