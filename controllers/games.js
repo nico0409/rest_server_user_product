@@ -6,7 +6,14 @@ const Poster = require("../models/poster");
 const Platform = require("../models/platform");
 
 const GetAllGames = async (req = request, res = response) => {
-  const { ["platform.url"]: platform, _sort, _limit, _start, url } = req.query;
+  const {
+    ["platform.url"]: platform,
+    _sort,
+    _limit,
+    _start,
+    url,
+    _q,
+  } = req.query;
 
   const sort = _sort ? _sort.split(":") : ["createdAt", "desc"];
   const limit = _limit ? parseInt(_limit) : 10;
@@ -34,6 +41,18 @@ const GetAllGames = async (req = request, res = response) => {
   if (url) {
     games = await Game.find({
       url: url,
+    })
+      .sort({ [sort[0]]: sort[1] })
+      .skip(start)
+      .limit(limit);
+  }
+  if (_q) {
+    games = await Game.find({
+      $or: [
+        {
+          title: { $regex: _q, $options: "i" },
+        },
+      ],
     })
       .sort({ [sort[0]]: sort[1] })
       .skip(start)

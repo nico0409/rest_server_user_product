@@ -14,6 +14,7 @@ class Server {
     this.platforms = "/platforms";
     this.games = "/games";
     this.favorites = "/favorites";
+    this.orders = "/orders";
 
     // Conectar a base de datos
     this.conectarDB();
@@ -48,6 +49,7 @@ class Server {
     this.app.use(this.platforms, require("../routes/platforms"));
     this.app.use(this.games, require("../routes/games.js"));
     this.app.use(this.favorites, require("../routes/favorites"));
+    this.app.use(this.orders, require("../routes/orders"));
   }
 
   listen() {

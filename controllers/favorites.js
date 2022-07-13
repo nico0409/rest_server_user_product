@@ -2,10 +2,13 @@ const { response, request } = require("express");
 const Mongoose = require("mongoose");
 
 const Favorites = require("../models/favorite");
+const Game = require("../models/game");
+const Poster = require("../models/poster");
 
 const getFavoriteByUserAndGame = async (req = request, res = response) => {
   const { users_permissions_user, game } = req.query;
-  if (!users_permissions_user || !game) {
+
+  if (users_permissions_user === undefined && game === undefined) {
     return res.status(400).json({
       ok: false,
       message: "Faltan parametros",
@@ -15,8 +18,27 @@ const getFavoriteByUserAndGame = async (req = request, res = response) => {
       const query = {
         users_permissions_user: Mongoose.Types.ObjectId(users_permissions_user),
       };
-      const [favorite] = await Promise.all([Favorites.find(query)]);
-      res.json(favorite);
+      const [favorites, games] = await Promise.all([
+        Favorites.find(query),
+        Game.find({}),
+      ]);
+
+      const favoritesWithGame = favorites.map(async (favorite) => {
+        const game = games.find(
+          (game) => game._id.toString() === favorite.game.toString()
+        );
+
+        const poster = await Poster.findById(game.poster);
+        game.poster = { url: poster.url };
+
+        return {
+          ...favorite.toJSON(),
+          game,
+        };
+      });
+
+      const arrayRespone = await Promise.all(favoritesWithGame);
+      res.json(arrayRespone);
     } else if (game && users_permissions_user) {
       const query = {
         users_permissions_user: Mongoose.Types.ObjectId(users_permissions_user),
@@ -24,7 +46,7 @@ const getFavoriteByUserAndGame = async (req = request, res = response) => {
       };
 
       const [favorite] = await Promise.all([Favorites.find(query)]);
-      console.log(favorite);
+
       res.json(favorite);
     }
   }
