@@ -43,6 +43,33 @@ const postOrder = async (req = request, res = response) => {
   });
 };
 
+const getOrder = async (req = request, res = response) => {
+  const { users_permissions_user, _sort } = req.query;
+
+  const sort = _sort ? _sort.split(":") : ["createdAt", "desc"];
+
+  const orders = await Order.find({
+    users_permissions_user: users_permissions_user,
+  }).sort({ [sort[0]]: sort[1] });
+
+  let ordersConf = [];
+  for await (const order of orders) {
+    const game = await Game.findById(order.game);
+    const poster = await Poster.findById(game.poster);
+
+    game.poster = { url: poster.url };
+    ordersConf.push({
+      ...order.toJSON(),
+      game,
+    });
+  }
+
+  const arrayRespone = await Promise.all(ordersConf);
+
+  res.json(arrayRespone);
+};
+
 module.exports = {
   postOrder,
+  getOrder,
 };

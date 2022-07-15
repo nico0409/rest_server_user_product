@@ -61,6 +61,7 @@ const GetAllGames = async (req = request, res = response) => {
 
   for await (const game of games) {
     const poster = await Poster.findById(game.poster[0]);
+
     game.poster = { url: poster.url };
 
     const screenshots = await Promise.all(

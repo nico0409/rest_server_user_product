@@ -60,7 +60,7 @@ const setFavoriteByUserAndGame = async (req = request, res = response) => {
   };
 
   const [favorite] = await Promise.all([Favorites.find(query)]);
-  console.log(favorite.length);
+
   if (favorite.length > 0) {
     return res.status(400).json({
       ok: false,

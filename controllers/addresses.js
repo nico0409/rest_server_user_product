@@ -41,12 +41,16 @@ const addressesPost = async (req, res = response) => {
 
 const addressesGet = async (req = request, res = response) => {
   const { users_permissions_user } = req.query;
-  const query = {
-    users_permissions_user: Mongoose.Types.ObjectId(users_permissions_user),
-  };
-  const [addresse] = await Promise.all([Addresse.find(query)]);
+  if (users_permissions_user) {
+    const query = {
+      users_permissions_user: Mongoose.Types.ObjectId(users_permissions_user),
+    };
+    const [addresse] = await Promise.all([Addresse.find(query)]);
 
-  res.json(addresse);
+    res.json(addresse);
+  } else {
+    res.status(400).json("el usuario es requerido");
+  }
 };
 
 const addressesPut = async (req, res = response) => {
